@@ -1,0 +1,400 @@
+GENERATE PARANTHESIS
+--------------------
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        
+        List<String> res = new ArrayList<>();
+        dfs(res, "", n, n);
+        return res;
+    }
+    
+    public void dfs(List<String> res, String s, int l, int r)
+    {
+        if(l > r)
+            return;
+        if(l == 0 && r == 0)
+        {
+            res.add(s);
+            return;
+        }
+        
+        if(l > 0)
+            dfs(res, s + "(", l-1, r);
+        if(r > 0)
+            dfs(res, s + ")", l, r-1);
+    }
+}
+
+LETTER COMBINATION OF PHONE NUMBER
+----------------------------------
+class Solution {
+    
+    
+    
+    public List<String> letterCombinations(String digits) {
+        
+        HashMap<Character, char[]> map = new HashMap<Character, char[]>();
+        map.put('2', new char[]{'a','b','c'});
+        map.put('3', new char[]{'d','e','f'});
+        map.put('4', new char[]{'g','h','i'});
+        map.put('5', new char[]{'j','k','l'});
+        map.put('6', new char[]{'m','n','o'});
+        map.put('7', new char[]{'p','q','r','s'});
+        map.put('8', new char[]{'t','u','v'});
+        map.put('9', new char[]{'w','x','y','z'});
+        
+        List<String> res = new ArrayList<>();
+        
+        if(digits.length() == 0)
+            return res;
+        
+        help(res, new StringBuilder(), 0, digits, map);
+        
+        return res;
+    }
+    
+    public void help(List<String> res, StringBuilder sb, int index, String digits, HashMap<Character, char[]> map)
+    {
+        if(index == digits.length())
+        {
+            res.add(sb.toString());
+            return;
+        }
+        
+        char cur = digits.charAt(index);
+        char[] arr = map.get(cur);
+        
+        for(int i = 0; i < arr.length; i++)
+        {
+            sb.append(arr[i]);
+            help(res, sb, index+1, digits, map);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+}
+
+COMBINATION SUM
+---------------
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        help(res, new ArrayList<Integer>(), candidates, target, 0);
+        return res;
+    }
+    
+    public void help(List<List<Integer>> res, List<Integer> temp, int[] nums, int remain, int start)
+    {
+        if(remain < 0)
+            return;
+        if(remain == 0)
+        {
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        for(int i = start; i < nums.length; i++)
+        {
+            temp.add(nums[i]);
+            help(res, temp, nums, remain - nums[i], i);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+COMBINATION SUM II
+------------------
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(candidates);
+        help(res, new ArrayList<Integer>(), candidates, target, 0);
+        return res;
+    }
+    
+    public void help(List<List<Integer>> res, List<Integer> temp, int[] nums, int remain, int start)
+    {
+        if(remain < 0)
+            return;
+        if(remain == 0)
+        {
+            res.add(new ArrayList<Integer>(temp));
+            return;
+        }
+        for(int i = start; i < nums.length; i++)
+        {
+            if(i > start && nums[i] == nums[i-1])
+                continue;
+            temp.add(nums[i]);
+            help(res, temp, nums, remain - nums[i], i+1);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+COMBINATIONS
+------------
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        help(res, new ArrayList<>(), n, k, 1);
+        return res;
+    }
+    
+    public void help(List<List<Integer>> res, List<Integer> temp, int n, int k, int start)
+    {
+        if(temp.size() == k)
+        {
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        
+        for(int i = start; i <= n; i++)
+        {
+            temp.add(i);
+            help(res, temp, n, k, i+1);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+SUBSETS
+-------
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        help(res, new ArrayList<>(), nums, 0);
+        return res;
+    }
+    
+    public void help(List<List<Integer>> res, List<Integer> temp, int[] nums, int start)
+    {
+        res.add(new ArrayList<>(temp));
+        for(int i = start; i < nums.length; i++)
+        {
+            temp.add(nums[i]);
+            help(res, temp, nums, i+1);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+SUBSETS II
+----------
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        help(res, new ArrayList<>(), nums, 0);
+        return res;
+    }
+    
+    public void help(List<List<Integer>> res, List<Integer> temp, int[] nums, int start)
+    {
+        res.add(new ArrayList<>(temp));
+        for(int i = start; i < nums.length; i++)
+        {
+            if(i > start && nums[i] == nums[i-1])
+                continue;
+            temp.add(nums[i]);
+            help(res, temp, nums, i+1);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+RESTORE IP ADDRESS
+------------------
+class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        
+        List<String> res = new ArrayList<>();
+        
+        if(s.length() > 12 || s.length() < 4)
+            return res;
+        
+        for(int a = 1; a <= 3; a++)
+        {
+            for(int b = 1; b <=3; b++)
+            {
+                for(int c = 1; c <= 3; c++)
+                {
+                    for(int d = 1; d <= 3; d++)
+                    {
+                        if(a + b + c + d == s.length())
+                        {
+                            String subA = s.substring(0, a);
+                            if(subA.startsWith("0") && subA.length() > 1)
+                                break;
+                            String subB = s.substring(a, a+b);
+                            if(subB.startsWith("0") && subB.length() > 1)
+                                break;
+                            String subC = s.substring(a+b, a+b+c);
+                            if(subC.startsWith("0") && subC.length() > 1)
+                                break;
+                            String subD = s.substring(a+b+c, a+b+c+d);
+                            if(subD.startsWith("0") && subD.length() > 1)
+                                break;
+                            
+                            if(Integer.valueOf(subA) <= 255
+                               && Integer.valueOf(subB) <= 255
+                               && Integer.valueOf(subC) <= 255
+                               && Integer.valueOf(subD) <= 255)
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(subA).append('.')
+                                    .append(subB).append('.')
+                                    .append(subC).append('.')
+                                    .append(subD);
+                                res.add(sb.toString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return res;
+    }
+}
+
+MAXIMUM LENGTH WITH UNIQUE CHARACTERS
+-------------------------------------
+class Solution {
+    public int maxLength(List<String> arr) {
+        
+        return help(arr, 0, "");
+    }
+    
+    public int help(List<String> arr, int index, String cur)
+    {
+        if(index == arr.size())
+            return cur.length();
+        
+        int res = cur.length();
+        
+        for(int i = index; i < arr.size(); i++)
+        {
+            String s = cur + arr.get(i);
+            if(isUnique(s))
+                res = Math.max(res, help(arr, i+1, s));
+        }
+        
+        return res;
+    }
+    
+    public boolean isUnique(String s)
+    {
+        Set<Character> set = new HashSet<Character>();
+        for(char c : s.toCharArray())
+            if(!set.add(c))
+                return false;
+        return true;
+    }
+}
+
+PERMUTATIONS
+------------
+
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        help(res, new ArrayList<>(), nums);
+        return res;
+    }
+    
+    public void help(List<List<Integer>> res, List<Integer> temp, int[] nums)
+    {
+        if(temp.size() == nums.length)
+        {
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        
+        for(int i = 0; i < nums.length; i++)
+        {
+            if(temp.contains(nums[i]))
+                continue;
+            temp.add(nums[i]);
+            help(res, temp, nums);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+PERMUTATIONS II
+---------------
+
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+     List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        help(res, new ArrayList<Integer>(), nums,new boolean[nums.length]);
+        return res;
+    }
+    
+    public void help(List<List<Integer>> res, List<Integer> temp, int[] nums, boolean[]used)
+    {
+        if(temp.size() == nums.length)
+            res.add(new ArrayList<Integer>(temp));
+        else
+        {
+            for(int i = 0; i < nums.length; i++)
+            {
+                if(used[i] || i > 0 && nums[i] == nums[i-1] && !used[i-1])
+                    continue;
+                used[i]=true;
+                temp.add(nums[i]);
+                help(res, temp, nums, used);
+                used[i]=false;
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
+}
+
+NEXT PERMUTATION
+----------------
+class Solution {
+    public void nextPermutation(int[] nums) {
+        
+        int i = nums.length - 2;
+        
+        while(i >= 0 && nums[i+1] <= nums[i])
+            i--;
+        
+        if(i >= 0)
+        {
+            int j = nums.length - 1;
+            while(j >= 0 && nums[j] <= nums[i])
+                j--;
+            
+            swap(nums, i, j);
+        }
+        
+        if(i+1 != nums.length-1)
+            reverse(nums, i+1);
+    }
+    
+    public void reverse(int[] nums, int start)
+    {
+        int i = start;
+        int j = nums.length - 1;
+        while(i < j)
+        {
+            swap(nums, i++, j--);
+        }
+    }
+    
+    public void swap(int[] nums, int i, int j)
+    {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
